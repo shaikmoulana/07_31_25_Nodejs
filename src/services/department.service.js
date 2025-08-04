@@ -1,4 +1,6 @@
-const { Department } = require('../models'); // Sequelize model
+// const { Department } = require('../models'); // Sequelize model
+const { Departments: Department } = require('../models');
+
 const { Op } = require('sequelize');
 
 class DepartmentService {

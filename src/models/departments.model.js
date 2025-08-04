@@ -33,7 +33,8 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: true
     }
   }, {
-    tableName: 'Departments',
+    tableName: 'WHTblDepartments',
+    schema: 'dbo',
     timestamps: false // Set to true if you want Sequelize to manage createdAt/updatedAt
   });
 

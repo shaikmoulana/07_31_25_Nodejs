@@ -19,13 +19,15 @@ app.use(express.urlencoded({ extended: true }));
 app.use(morgan('dev'));
 
 // === Routes imports ===
-const loginRoutes = require('./routes/login.routes');
-const departmentRoutes = require('./routes/department.routes');
-const designationRoutes = require('./routes/designation.routes');
-const lostItemRoutes = require('./routes/lostItem.routes');
-const reportRoutes = require('./routes/reports.routes');
-const roleRoutes = require('./routes/role.routes');
-const uploadRoutes = require('./routes/upload.routes');
+const loginRoutes = require('./src/routes/login.routes')
+const departmentRoutes = require('./src/routes/department.routes');
+const designationRoutes = require('./src/routes/designation.routes');
+const lostItemRoutes = require('./src/routes/lostItem.routes');
+const reportRoutes = require('./src/routes/reports.routes');
+const roleRoutes = require('./src/routes/role.routes');
+const uploadRoutes = require('./src/routes/upload.routes');
+const userRoutes = require('./src/routes/users.routes');
+const identifiedRoutes = require('./src/routes/identified.routes');
 
 // === API Routes Setup ===
 // Prefix routes consistently with '/api'
@@ -36,6 +38,8 @@ app.use('/api/lostItemRequest', lostItemRoutes);
 app.use('/api/reports', reportRoutes);
 app.use('/api/role', roleRoutes);
 app.use('/api', uploadRoutes); // Upload routes generally prefixed at /api
+app.use('/api/users', userRoutes);
+app.use('/api/identified', identifiedRoutes);
 
 // === Health check or root endpoint ===
 app.get('/', (req, res) => {

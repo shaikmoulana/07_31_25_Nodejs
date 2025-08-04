@@ -1,3 +1,5 @@
+// models/warehouseItem.model.js
+
 module.exports = (sequelize, DataTypes) => {
   const WareHouseItem = sequelize.define('WareHouseItem', {
     Id: {
@@ -14,7 +16,7 @@ module.exports = (sequelize, DataTypes) => {
     UpdatedDate: DataTypes.DATE,
     Category: DataTypes.STRING,
     FilePath: DataTypes.STRING,
-    WarehouseLocation: DataTypes.STRING, // Foreign key to WHLocation
+    WarehouseLocation: DataTypes.STRING, // FK to WHLocation
     Status: DataTypes.STRING,
     Tags: DataTypes.STRING,
     ItemDescription: DataTypes.STRING,
@@ -33,24 +35,9 @@ module.exports = (sequelize, DataTypes) => {
     ReceivedBy: DataTypes.STRING,
     ReceivedOn: DataTypes.DATE,
   }, {
-    tableName: 'WareHouseItems', // Or whatever your actual DB table is named
+    tableName: 'WareHouseItems',
     timestamps: false,
   });
-
-  WareHouseItem.associate = models => {
-    // A warehouse item has many LostItemRequests
-    WareHouseItem.hasMany(models.LostItemRequests, {
-      foreignKey: 'ClaimId',
-      as: 'LostItemRequests'
-    });
-
-    // If WarehouseLocation is a FK
-    WareHouseItem.belongsTo(models.WHLocation, {
-      foreignKey: 'WarehouseLocation',
-      targetKey: 'Locations',
-      as: 'Location'
-    });
-  };
 
   return WareHouseItem;
 };

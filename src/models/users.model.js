@@ -1,7 +1,7 @@
-// src/models/users.model.js
+// models/users.model.js
 
 module.exports = (sequelize, DataTypes) => {
-  const Users = sequelize.define('Users', {
+  const User = sequelize.define('User', {
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
@@ -16,18 +16,47 @@ module.exports = (sequelize, DataTypes) => {
       unique: true,
       allowNull: false
     },
-    employeeID: DataTypes.STRING,
-    phoneNo: DataTypes.STRING,
-    designation: DataTypes.STRING,
-    department: DataTypes.STRING,
-    role: DataTypes.STRING,
-    reportingTo: DataTypes.STRING,
-    profile: DataTypes.STRING,
-    location: DataTypes.STRING,
+    employeeID: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    phoneNo: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+
+    // Foreign Keys
+    DesignationId: {
+      type: DataTypes.UUID,
+      allowNull: true
+    },
+    DepartmentId: {
+      type: DataTypes.UUID,
+      allowNull: true
+    },
+    Role: {
+      type: DataTypes.UUID,
+      allowNull: true
+    },
+    ReportingTo: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+
+    profile: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    location: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+
     isActive: {
       type: DataTypes.BOOLEAN,
       defaultValue: true
     },
+
     createdBy: {
       type: DataTypes.STRING,
       defaultValue: 'SYSTEM'
@@ -36,12 +65,18 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.DATE,
       defaultValue: DataTypes.NOW
     },
-    updatedBy: DataTypes.STRING,
-    updatedDate: DataTypes.DATE
+    updatedBy: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    updatedDate: {
+      type: DataTypes.DATE,
+      allowNull: true
+    }
   }, {
-    tableName: 'Users', // or whatever your table name is
-    timestamps: false   // disable if you’re managing timestamps manually
+    tableName: 'WHTblUser',
+    timestamps: false
   });
 
-  return Users;
+  return User;
 };

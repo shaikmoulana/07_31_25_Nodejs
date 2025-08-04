@@ -1,5 +1,7 @@
+// models/lostItem.model.js
+
 module.exports = (sequelize, DataTypes) => {
-  return sequelize.define('LostItemRequests', {
+  const LostItemRequest = sequelize.define('LostItemRequest', {
     Id: { type: DataTypes.UUID, primaryKey: true, defaultValue: DataTypes.UUIDV4 },
     Description: { type: DataTypes.STRING(255), allowNull: false },
     Color: DataTypes.STRING(50),
@@ -26,7 +28,9 @@ module.exports = (sequelize, DataTypes) => {
     UpdatedBy: DataTypes.STRING(100),
     UpdatedDate: DataTypes.DATE
   }, {
-    tableName: 'LostItemRequests',
+    tableName: 'WHTblLostItemRequest',
     timestamps: false,
   });
+
+  return LostItemRequest;
 };

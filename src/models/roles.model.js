@@ -1,9 +1,11 @@
+// models/roles.model.js
+
 module.exports = (sequelize, DataTypes) => {
-  return sequelize.define('Roles', {
+  const Role = sequelize.define('Role', {
     Id: {
       type: DataTypes.UUID,
       primaryKey: true,
-      defaultValue: DataTypes.UUIDV4,
+      defaultValue: DataTypes.UUIDV4
     },
     RoleName: {
       type: DataTypes.STRING(50),
@@ -14,7 +16,9 @@ module.exports = (sequelize, DataTypes) => {
       }
     }
   }, {
-    tableName: 'Roles',
+    tableName: 'WHTblRole',
     timestamps: false
   });
+
+  return Role;
 };

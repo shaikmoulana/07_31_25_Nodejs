@@ -1,9 +1,10 @@
-// models/department.model.js
+// models/departments.model.js
+
 module.exports = (sequelize, DataTypes) => {
   const Department = sequelize.define('Department', {
     id: {
-      type: DataTypes.UUID,           // or INTEGER if using numeric IDs
-      defaultValue: DataTypes.UUIDV4, // auto-generate UUID if you prefer
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
       primaryKey: true,
       allowNull: false
     },
@@ -33,18 +34,10 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: true
     }
   }, {
-    tableName: 'WHTblDepartments',
+    tableName: 'WHTblDepartment',
     schema: 'dbo',
-    timestamps: false // Set to true if you want Sequelize to manage createdAt/updatedAt
+    timestamps: false
   });
-
-  // Associations (if any)
-  Department.associate = models => {
-    Department.hasMany(models.User, {
-      foreignKey: 'departmentId',
-      as: 'Users'
-    });
-  };
 
   return Department;
 };

@@ -1,3 +1,5 @@
+// models/forgotPassword.model.js
+
 module.exports = (sequelize, DataTypes) => {
   const ForgotPassword = sequelize.define('ForgotPassword', {
     Id: {
@@ -6,24 +8,29 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue: DataTypes.UUIDV4,
     },
     UserId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    Token: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    ExpiryTime: {
+    ExpiresAt: {
       type: DataTypes.DATE,
       allowNull: false,
-      // Set default 10 minutes from now in business logic, not model, or use below for DB default on create
-      // defaultValue: () => new Date(Date.now() + 10 * 60000)
-    }
+    },
+    IsUsed: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
+    CreatedDate: {
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW,
+    },
   }, {
-    tableName: 'ForgotPassword',
-    timestamps: false
+    tableName: 'WHForgotPassword',
+    timestamps: false,
   });
-
-  ForgotPassword.associate = models => {
-    // A ForgotPassword entry belongs to a User (Users table)
-    ForgotPassword.belongsTo(models.Users, { foreignKey: 'UserId', as: 'User' });
-  };
 
   return ForgotPassword;
 };

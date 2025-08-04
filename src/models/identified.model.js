@@ -1,5 +1,7 @@
+// models/identified.model.js
+
 module.exports = (sequelize, DataTypes) => {
-  const IdentifiedItems = sequelize.define('IdentifiedItems', {
+  const IdentifiedItem = sequelize.define('IdentifiedItem', {
     Id: {
       type: DataTypes.UUID,
       primaryKey: true,
@@ -18,22 +20,24 @@ module.exports = (sequelize, DataTypes) => {
     Category: DataTypes.STRING,
     Tags: DataTypes.STRING,
     Comments: DataTypes.STRING,
-    IsActive: { type: DataTypes.BOOLEAN, defaultValue: true },
-    CreatedBy: { type: DataTypes.STRING, defaultValue: "SYSTEM" },
-    CreatedDate: { type: DataTypes.DATE, defaultValue: DataTypes.NOW },
+    IsActive: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: true,
+    },
+    CreatedBy: {
+      type: DataTypes.STRING,
+      defaultValue: 'SYSTEM',
+    },
+    CreatedDate: {
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW,
+    },
     UpdatedBy: DataTypes.STRING,
     UpdatedDate: DataTypes.DATE,
   }, {
-    tableName: "WHTblIdentifiedItems",
-    timestamps: false
+    tableName: 'WHTblIdentifiedItems',
+    timestamps: false,
   });
 
-  // Associations if needed
-  /*
-  IdentifiedItems.associate = (models) => {
-    IdentifiedItems.belongsTo(models.User, { foreignKey: 'CreatedBy', as: 'Creator' });
-  };
-  */
-
-  return IdentifiedItems;
+  return IdentifiedItem;
 };

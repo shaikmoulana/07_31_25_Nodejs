@@ -1,5 +1,5 @@
 const { Sequelize, DataTypes } = require('sequelize');
-const config = require('../config/db.config'); // Your DB config file
+const config = require('../config/db.config');
 
 const sequelize = new Sequelize(config.database, config.username, config.password, {
   host: config.host,
@@ -9,64 +9,71 @@ const sequelize = new Sequelize(config.database, config.username, config.passwor
 
 const db = {};
 
-// === Import Models ===
-db.Roles = require('./roles.model')(sequelize, DataTypes);
-db.Departments = require('./departments.model')(sequelize, DataTypes);
-db.Designations = require('./designations.model')(sequelize, DataTypes);
-db.Users = require('./users.model')(sequelize, DataTypes);
-db.LostItemRequests = require('./lostItem.model')(sequelize, DataTypes);
-db.IdentifiedItems = require('./identified.model')(sequelize, DataTypes);
+// ===== Import Models =====
+db.Role = require('./roles.model')(sequelize, DataTypes);
+db.Department = require('./departments.model')(sequelize, DataTypes);
+db.Designation = require('./designations.model')(sequelize, DataTypes);
+db.User = require('./users.model')(sequelize, DataTypes);
+db.LostItemRequest = require('./lostItem.model')(sequelize, DataTypes);
+db.IdentifiedItem = require('./identified.model')(sequelize, DataTypes);
 db.WareHouseItem = require('./warehouseItem.model')(sequelize, DataTypes);
 db.WHLocation = require('./whLocation.model')(sequelize, DataTypes);
 db.ForgotPassword = require('./forgotPassword.model')(sequelize, DataTypes);
-db.Reports = require('./reports.model')(sequelize, DataTypes);
+db.Report = require('./reports.model')(sequelize, DataTypes);
 
-// === Associations (Equivalent to OnModelCreating) ===
+// ===== Manually invoke associate() where defined =====
+Object.keys(db).forEach(modelName => {
+  if (db[modelName].associate) {
+    db[modelName].associate(db);
+  }
+});
 
-// Users - Designation
-db.Users.belongsTo(db.Designations, { foreignKey: 'DesignationId' });
-db.Designations.hasMany(db.Users, { foreignKey: 'DesignationId' });
+// ===== Associations =====
 
-// Users - Department
-db.Users.belongsTo(db.Departments, { foreignKey: 'DepartmentId' });
-db.Departments.hasMany(db.Users, { foreignKey: 'DepartmentId' });
+// User - Designation
+db.User.belongsTo(db.Designation, { foreignKey: 'DesignationId' });
+db.Designation.hasMany(db.User, { foreignKey: 'DesignationId' });
 
-// // Users - Roles
-// db.Users.belongsTo(db.Roles, { foreignKey: 'Role' });
-// db.Roles.hasMany(db.Users, { foreignKey: 'Role' });
+// User - Department
+db.User.belongsTo(db.Department, { foreignKey: 'DepartmentId' });
+db.Department.hasMany(db.User, { foreignKey: 'DepartmentId' });
 
-// Users - Roles association with alias to prevent naming collision
-db.Users.belongsTo(db.Roles, { foreignKey: 'Role', as: 'RoleInfo' });
-db.Roles.hasMany(db.Users, { foreignKey: 'Role', as: 'UsersInRole' });
+// User - Role
+db.User.belongsTo(db.Role, { foreignKey: 'Role', as: 'RoleInfo' });
+db.Role.hasMany(db.User, { foreignKey: 'Role', as: 'UsersInRole' });
 
+// Self-reference: ReportingTo
+db.User.belongsTo(db.User, { as: 'ReportingToUser', foreignKey: 'ReportingTo' });
+db.User.hasMany(db.User, { as: 'Subordinates', foreignKey: 'ReportingTo' });
 
-// Users - ReportingTo (Self-reference)
-db.Users.belongsTo(db.Users, { as: 'ReportingToUser', foreignKey: 'ReportingTo' });
-db.Users.hasMany(db.Users, { as: 'Subordinates', foreignKey: 'ReportingTo' });
+// LostItemRequest - WareHouseItem
+db.LostItemRequest.belongsTo(db.WareHouseItem, { foreignKey: 'ClaimId' });
+db.WareHouseItem.hasMany(db.LostItemRequest, { foreignKey: 'ClaimId' });
 
-// LostItemRequests - WareHouseItem
-db.LostItemRequests.belongsTo(db.WareHouseItem, { foreignKey: 'ClaimId' });
-db.WareHouseItem.hasMany(db.LostItemRequests, { foreignKey: 'ClaimId' });
+// LostItemRequest - CreatedByUser / UpdatedByUser
+db.LostItemRequest.belongsTo(db.User, { as: 'CreatedByUser', foreignKey: 'CreatedBy' });
+db.User.hasMany(db.LostItemRequest, { as: 'CreatedLostItems', foreignKey: 'CreatedBy' });
 
-// LostItemRequests - CreatedByUser
-db.LostItemRequests.belongsTo(db.Users, { as: 'CreatedByUser', foreignKey: 'CreatedBy' });
-db.Users.hasMany(db.LostItemRequests, { as: 'CreatedByUser', foreignKey: 'CreatedBy' });
-
-// LostItemRequests - UpdatedByUser
-db.LostItemRequests.belongsTo(db.Users, { as: 'UpdatedByUser', foreignKey: 'UpdatedBy' });
-db.Users.hasMany(db.LostItemRequests, { as: 'UpdatedByUser', foreignKey: 'UpdatedBy' });
+db.LostItemRequest.belongsTo(db.User, { as: 'UpdatedByUser', foreignKey: 'UpdatedBy' });
+db.User.hasMany(db.LostItemRequest, { as: 'UpdatedLostItems', foreignKey: 'UpdatedBy' });
 
 // ForgotPassword - User
-db.ForgotPassword.belongsTo(db.Users, { foreignKey: 'UserId' });
-db.Users.hasMany(db.ForgotPassword, { foreignKey: 'UserId' });
+db.ForgotPassword.belongsTo(db.User, { foreignKey: 'UserId' });
+db.User.hasMany(db.ForgotPassword, { foreignKey: 'UserId' });
 
 // Reports - ReportedByUser
-db.Reports.belongsTo(db.Users, { as: 'ReportedByUser', foreignKey: 'ReportedBy' });
-db.Users.hasMany(db.Reports, { as: 'ReportedByUser', foreignKey: 'ReportedBy' });
+db.Report.belongsTo(db.User, { as: 'ReportedByUser', foreignKey: 'CreatedBy' });
+db.User.hasMany(db.Report, { as: 'ReportsByUser', foreignKey: 'CreatedBy' });
 
+// WareHouseItem - WHLocation (if FK is defined)
+db.WareHouseItem.belongsTo(db.WHLocation, {
+  foreignKey: 'WarehouseLocation',
+  targetKey: 'Locations',
+  as: 'Location'
+});
+
+// Final exports
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
-
-
 
 module.exports = db;

@@ -1,4 +1,4 @@
-// models/designation.model.js
+// models/designations.model.js
 
 module.exports = (sequelize, DataTypes) => {
   const Designation = sequelize.define('Designation', {
@@ -26,24 +26,17 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue: DataTypes.NOW
     },
     updatedBy: {
-      type: DataTypes.STRING
+      type: DataTypes.STRING,
+      allowNull: true
     },
     updatedDate: {
-      type: DataTypes.DATE
+      type: DataTypes.DATE,
+      allowNull: true
     }
   }, {
-    tableName: 'Designations',
-    timestamps: false // or true if you want Sequelize to manage `createdAt` and `updatedAt`
+    tableName: 'WHTblDesignation',
+    timestamps: false
   });
-
-
-  // Associations (if any)
-  Designation.associate = models => {
-    Designation.hasMany(models.User, {
-      foreignKey: 'designationId',
-      as: 'Users'
-    });
-  };
 
   return Designation;
 };

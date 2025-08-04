@@ -1,10 +1,11 @@
 // const { Department } = require('../models'); // Sequelize model
-const { Departments: Department } = require('../models');
+const { Department } = require('../models');
 
 const { Op } = require('sequelize');
 
 class DepartmentService {
     async getAll() {
+        console.info('GetAll method');
         const departments = await Department.findAll();
 
         return departments.map(dept => ({

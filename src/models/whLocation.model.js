@@ -1,22 +1,35 @@
+// models/whLocation.model.js
+
 module.exports = (sequelize, DataTypes) => {
   const WHLocation = sequelize.define('WHLocation', {
+    Id: {
+      type: DataTypes.UUID,
+      primaryKey: true,
+      defaultValue: DataTypes.UUIDV4,
+    },
     Locations: {
+      type: DataTypes.STRING(100),
+      allowNull: false,
+      unique: true,
+    },
+    IsActive: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: true,
+    },
+    CreatedBy: {
       type: DataTypes.STRING,
-      primaryKey: true
-    }
+      defaultValue: 'SYSTEM',
+    },
+    CreatedDate: {
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW,
+    },
+    UpdatedBy: DataTypes.STRING,
+    UpdatedDate: DataTypes.DATE,
   }, {
-    tableName: 'WHLocation', // Or your actual DB table name
-    timestamps: false
+    tableName: 'WHLocation',
+    timestamps: false,
   });
-
-  WHLocation.associate = models => {
-    // A location can have many warehouse items
-    WHLocation.hasMany(models.WareHouseItem, {
-      foreignKey: 'WarehouseLocation',
-      sourceKey: 'Locations',
-      as: 'WareHouseItems'
-    });
-  };
 
   return WHLocation;
 };

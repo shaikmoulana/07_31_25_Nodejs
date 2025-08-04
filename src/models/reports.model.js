@@ -1,5 +1,7 @@
+// models/reports.model.js
+
 module.exports = (sequelize, DataTypes) => {
-  const Reports = sequelize.define('Reports', {
+  const Report = sequelize.define('Report', {
     Id: {
       type: DataTypes.UUID,
       primaryKey: true,
@@ -34,16 +36,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.DATE,
       allowNull: true,
     }
-    // Add more fields as necessary
   }, {
-    tableName: 'Reports',
+    tableName: 'WHTblReports',
     timestamps: false,
   });
 
-  // Example association:
-  // Reports.associate = (models) => {
-  //   Reports.belongsTo(models.User, { foreignKey: 'CreatedBy', as: 'Creator' });
-  // };
-
-  return Reports;
+  return Report;
 };

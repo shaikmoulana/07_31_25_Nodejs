@@ -1,55 +1,46 @@
-// repositories/userRepository.js
-
 const db = require('../models');
-const User = db.Users; // or db.User, adjust as per your model file
+const User = db.User;
 
 class UserRepository {
-  // Fetch all users
   async getAll() {
     try {
       return await User.findAll();
     } catch (error) {
-      console.error('Error in getAll:', error);
-      throw error;
+      console.error('Error in UserRepository.getAll:', error);
+      throw new Error('Could not retrieve users.');
     }
   }
 
-  // Fetch user by ID
   async get(id) {
     try {
       return await User.findByPk(id);
     } catch (error) {
-      console.error('Error in get:', error);
-      throw error;
+      console.error('Error in UserRepository.get:', error);
+      throw new Error('Could not retrieve the user.');
     }
   }
 
-  // Create a new user
   async create(user) {
     try {
-      const created = await User.create(user);
-      return created;
+      return await User.create(user);
     } catch (error) {
-      console.error('Error in create:', error);
-      throw error;
+      console.error('Error in UserRepository.create:', error);
+      throw new Error('Could not create the user.');
     }
   }
 
-  // Update user (expects user object with valid ID)
   async update(user) {
     try {
       const existing = await User.findByPk(user.id);
       if (!existing) return null;
 
-      await existing.update(user);
-      return existing;
+      return await existing.update(user);
     } catch (error) {
-      console.error('Error in update:', error);
-      throw error;
+      console.error('Error in UserRepository.update:', error);
+      throw new Error('Could not update the user.');
     }
   }
 
-  // Delete user by ID
   async delete(id) {
     try {
       const user = await User.findByPk(id);
@@ -58,8 +49,8 @@ class UserRepository {
       await user.destroy();
       return true;
     } catch (error) {
-      console.error('Error in delete:', error);
-      throw error;
+      console.error('Error in UserRepository.delete:', error);
+      throw new Error('Could not delete the user.');
     }
   }
 }
